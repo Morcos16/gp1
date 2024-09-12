@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace gp1
 {
@@ -9,8 +11,10 @@ namespace gp1
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Vector2 pos1 = Vector2.Zero;
-        Logo logo;
-        Logo logotrans;
+        //Logo logo;
+        //Logo logotrans;
+        private List<Logo> logoList;
+        private Random rnd;
 
         public Game1()
         {
@@ -41,8 +45,21 @@ namespace gp1
             int stopX = Window.ClientBounds.Width - mauTexture.Width;
             int stopY = Window.ClientBounds.Height - mauTexture.Height;
 
-            logo = new Logo(mauTexture, pos1, stopX, stopY);
-            logotrans = new Logo(mauTransTex, pos2, stopX, stopY);
+            rnd = new Random();
+
+            logoList = new List<Logo>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                int randX = rnd.Next(0, stopX);
+                int randY = rnd.Next(0, stopY);
+                Vector2 pos = new Vector2(randX, randY);
+                Logo templogo = new Logo(mauTransTex, pos, stopX, stopY);
+                logoList.Add(templogo);
+            }
+
+            //logo = new Logo(mauTexture, pos1, stopX, stopY);
+            //logotrans = new Logo(mauTransTex, pos2, stopX, stopY);
 
             // TODO: use this.Content to load your game content here
         }
@@ -52,9 +69,13 @@ namespace gp1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            foreach (Logo logo in logoList) 
+            {
+                logo.Update();
+            }
             // TODO: Add your update logic here
-            logo.Update();
-            logotrans.Update();
+            //logo.Update();
+            //logotrans.Update();
 
             base.Update(gameTime);
         }
@@ -65,8 +86,13 @@ namespace gp1
 
             _spriteBatch.Begin();
 
-            logo.Draw(_spriteBatch);
-            logotrans.Draw(_spriteBatch);
+            foreach (Logo logo in logoList) 
+            {
+                logo.Draw(_spriteBatch);
+            }
+
+            //logo.Draw(_spriteBatch);
+            //logotrans.Draw(_spriteBatch);
 
             _spriteBatch.End();
             // TODO: Add your drawing code here
